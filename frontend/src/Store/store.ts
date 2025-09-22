@@ -1,8 +1,10 @@
 import { configureStore } from "@reduxjs/toolkit";
 
+import userReducer from './usersDataStore';
+
 const store = configureStore({
     reducer: {
-
+        USERS_DATA_SLICES_NAME: userReducer,
     }
 });
 
