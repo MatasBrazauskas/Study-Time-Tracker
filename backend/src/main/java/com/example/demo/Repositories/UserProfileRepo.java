@@ -12,6 +12,4 @@ import java.util.Optional;
 public interface UserProfileRepo extends JpaRepository<UsersProfileInformation, Long>
 {
     Optional<UsersProfileInformation> findByEmail(String email);
-
-    Optional<UsersProfileInformation> save(CreateUserProfile profile);
 }

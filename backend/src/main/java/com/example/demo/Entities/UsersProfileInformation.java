@@ -1,8 +1,11 @@
 package com.example.demo.Entities;
 
+import com.example.demo.DTOs.CreateUserProfile;
+import com.example.demo.DTOs.UserProfileOutput;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Size;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 import org.springframework.data.annotation.CreatedDate;
@@ -10,8 +13,9 @@ import org.springframework.data.annotation.CreatedDate;
 import java.time.LocalDate;
 
 @Entity
-@Table(name = "UserProfile")
+@Table(name = "UserProfile", indexes = {@Index(columnList = "email")})
 @Data
+@NoArgsConstructor
 public class UsersProfileInformation
 {
     private static final int MAX_USERNAME_LENGTH = 255;
@@ -41,4 +45,11 @@ public class UsersProfileInformation
     @UpdateTimestamp
     @Column(nullable = false, columnDefinition = "DATE DEFAULT(CURRENT_DATE)")
     private LocalDate lastOnline;
+
+    public UsersProfileInformation(CreateUserProfile newUser)
+    {
+        this.username = newUser.getUsername();
+        this.email = newUser.getEmail();
+        this.role = Role.USER;
+    }
 }
