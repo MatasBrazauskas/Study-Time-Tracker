@@ -39,4 +39,10 @@ public class UserProfileController {
     {
         log.warn("User profile controller : getting users information");
     }
+
+    @DeleteMapping
+    public void deleteUser()
+    {
+
+    }
 }

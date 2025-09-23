@@ -35,7 +35,7 @@ public class CookieManagerFilter extends OncePerRequestFilter
         final String sessionJwt = middleWareUtils.extractSessionCookie(request);
         final String persistentJwt = middleWareUtils.extractPersistentCookie(request);
 
-        middleWareUtils.setSessionJwt(request,sessionJwt);
+        //middleWareUtils.setSessionJwt(request,sessionJwt);
         //middleWareUtils.setPersistentJwt(request,persistentJwt);
 
         log.info("Session JWT: {}", sessionJwt);

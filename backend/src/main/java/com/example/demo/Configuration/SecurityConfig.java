@@ -22,7 +22,8 @@ public class SecurityConfig {
 
             .authorizeHttpRequests(auth -> auth
                     .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
-                    .requestMatchers("/**").permitAll()
+                    .requestMatchers("/userProfile/**").permitAll()
+                    .requestMatchers(HttpMethod.DELETE, "/userProfile").hasAnyAuthority("USER")
             )
 
             .exceptionHandling(exceptions -> exceptions
