@@ -5,6 +5,8 @@ import { type UsersInformation } from "../Utilities/types";
 const initialState:UsersInformation = {
     username: 'GUEST',
     role: 'GUEST',
+    lastOnline: new Date().toLocaleDateString('en-CA'),
+    accCreated: new Date().toLocaleDateString('en-CA'), 
 }
 
 const usersSlice = createSlice({
@@ -17,6 +19,9 @@ const usersSlice = createSlice({
         updateUsersInfo: (state: UsersInformation, action: PayloadAction<UsersInformation>) => {
             state.username = action.payload.username;
             state.role = action.payload.role;
+            state.lastOnline = action.payload.lastOnline;
+            state.accCreated = action.payload.accCreated;
+            // return action.payload;
         }
     }
 });
