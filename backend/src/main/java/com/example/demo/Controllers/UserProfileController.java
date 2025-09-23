@@ -1,6 +1,7 @@
 package com.example.demo.Controllers;
 
 import com.example.demo.DTOs.CreateUserProfile;
+import com.example.demo.DTOs.UserProfileOutput;
 import com.example.demo.Services.UserProfileService;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
@@ -19,13 +20,13 @@ public class UserProfileController {
     }
 
     @PostMapping
-    public ResponseEntity<?> logTheUser(@Valid @RequestBody CreateUserProfile  createUserProfile)
+    public ResponseEntity<UserProfileOutput> logTheUser(/*@Valid*/ @RequestBody CreateUserProfile  createUserProfile)
     {
         return userProfileService.createUsersInDataBase(createUserProfile);
     }
 
     @GetMapping
-    public ResponseEntity<Void> createCookies()
+    public ResponseEntity<?> createCookies()
     {
         log.warn("createCookies");
         return ResponseEntity.ok().build();
