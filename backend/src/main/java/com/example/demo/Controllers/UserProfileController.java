@@ -3,6 +3,7 @@ package com.example.demo.Controllers;
 import com.example.demo.DTOs.CreateUserProfile;
 import com.example.demo.DTOs.UserProfileOutput;
 import com.example.demo.Services.UserProfileService;
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -20,15 +21,17 @@ public class UserProfileController {
     }
 
     @PostMapping
-    public ResponseEntity<UserProfileOutput> logTheUser(/*@Valid*/ @RequestBody CreateUserProfile  createUserProfile)
+    public ResponseEntity<UserProfileOutput> logTheUser(@RequestBody CreateUserProfile  createUserProfile, HttpServletResponse response)
     {
-        return userProfileService.createUsersInDataBase(createUserProfile);
+        log.info("UserProfileController: logTheUser");
+        return userProfileService.createUsersInDataBase(createUserProfile, response);
     }
 
     @GetMapping
-    public ResponseEntity<?> createCookies()
+    public ResponseEntity<UserProfileOutput> getUsersInformation(final String email)
     {
         log.warn("createCookies");
-        return ResponseEntity.ok().build();
+        var user = userProfileService.findByEmail(email);
+        return ResponseEntity.ok(new UserProfileOutput(user));
     }
 }

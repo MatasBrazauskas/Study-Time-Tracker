@@ -4,9 +4,13 @@ import com.example.demo.DTOs.CreateUserProfile;
 import com.example.demo.DTOs.UserProfileOutput;
 import com.example.demo.Entities.UsersProfileInformation;
 import com.example.demo.Repositories.UserProfileRepo;
+import jakarta.persistence.EntityNotFoundException;
+import jakarta.servlet.http.HttpServletResponse;
 import org.apache.coyote.Response;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+
+import java.util.Optional;
 
 @Service
 public class UserProfileService
@@ -18,7 +22,7 @@ public class UserProfileService
         this.userProfileRepo = userProfileRepo;
     }
 
-    public ResponseEntity<UserProfileOutput> createUsersInDataBase(CreateUserProfile createUserProfile)
+    public ResponseEntity<UserProfileOutput> createUsersInDataBase(CreateUserProfile createUserProfile, HttpServletResponse response)
     {
         var existingUser = userProfileRepo.findByEmail(createUserProfile.getEmail());
 
@@ -35,5 +39,9 @@ public class UserProfileService
         }
 
         return ResponseEntity.ok(new UserProfileOutput(existingUser.get()));
+    }
+
+    public UsersProfileInformation findByEmail(final String email){
+        return userProfileRepo.findByEmail(email).get();
     }
 }
