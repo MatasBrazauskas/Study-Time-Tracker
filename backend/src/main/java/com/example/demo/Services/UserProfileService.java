@@ -1,6 +1,8 @@
 package com.example.demo.Services;
 
 import com.example.demo.DTOs.CreateUserProfile;
+import com.example.demo.DTOs.UserProfileOutput;
+import com.example.demo.Entities.UsersProfileInformation;
 import com.example.demo.Repositories.UserProfileRepo;
 import org.apache.coyote.Response;
 import org.springframework.http.ResponseEntity;
@@ -16,17 +18,22 @@ public class UserProfileService
         this.userProfileRepo = userProfileRepo;
     }
 
-    public ResponseEntity<?> createUsersInDataBase(CreateUserProfile createUserProfile)
+    public ResponseEntity<UserProfileOutput> createUsersInDataBase(CreateUserProfile createUserProfile)
     {
-        var user = userProfileRepo.findByEmail(createUserProfile.getEmail());
+        var existingUser = userProfileRepo.findByEmail(createUserProfile.getEmail());
 
-        if(user.isEmpty())
+        if(existingUser.isEmpty())
         {
+            var newProfile = new UsersProfileInformation();
 
-        }else{
+            newProfile.setUsername(createUserProfile.getName());
+            newProfile.setEmail(createUserProfile.getEmail());
+            newProfile.setRole(com.example.demo.Entities.UsersProfileInformation.Role.USER);
 
+            var createdUser = userProfileRepo.save(newProfile);
+            return ResponseEntity.ok(new UserProfileOutput(createdUser));
         }
 
-        return ResponseEntity.ok().build();
+        return ResponseEntity.ok(new UserProfileOutput(existingUser.get()));
     }
 }
