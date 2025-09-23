@@ -2,8 +2,9 @@ package com.example.demo.Controllers;
 
 import com.example.demo.DTOs.CreateUserProfile;
 import com.example.demo.DTOs.UserProfileOutput;
+import com.example.demo.Entities.UsersProfileInformation;
 import com.example.demo.Services.UserProfileService;
-import jakarta.validation.Valid;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -19,16 +20,23 @@ public class UserProfileController {
         this.userProfileService = userProfileService;
     }
 
-    @PostMapping
-    public ResponseEntity<UserProfileOutput> logTheUser(/*@Valid*/ @RequestBody CreateUserProfile  createUserProfile)
+    @PostMapping("/register")
+    public ResponseEntity<UserProfileOutput> RegisterUser(@RequestBody CreateUserProfile  createUserProfile, HttpServletResponse response)
     {
-        return userProfileService.createUsersInDataBase(createUserProfile);
+        log.info("UserProfileController: register user");
+        return userProfileService.registerInDb(createUserProfile, response);
+    }
+
+    @PostMapping("/logIn")
+    public ResponseEntity<UserProfileOutput> LogInTheUser(@RequestBody CreateUserProfile createUserProfile, HttpServletResponse response)
+    {
+        log.info("User profile controller: log in");
+        return userProfileService.retrieveUsersData(createUserProfile, response);
     }
 
     @GetMapping
-    public ResponseEntity<?> createCookies()
+    public void getUsersInformation(final String email)
     {
-        log.warn("createCookies");
-        return ResponseEntity.ok().build();
+        log.warn("User profile controller : getting users information");
     }
 }
