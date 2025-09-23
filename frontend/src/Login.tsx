@@ -3,6 +3,8 @@ import { useDispatch } from "react-redux";
 import { useMutation } from "@tanstack/react-query";
 import { jwtDecode } from "jwt-decode";
 
+import LogInUser from "./APIs/logInUser";
+
 type UsersInfo = {
     email: string,
     name: string,
@@ -17,8 +19,9 @@ function LogIn()
                 email: decodedObject.email!,
                 name: decodedObject.name!,
             }
-
-            console.table(usersInfo);
+            
+            const data = await LogInUser(usersInfo);
+            console.table(data);
         }
     });
 
