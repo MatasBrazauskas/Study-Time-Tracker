@@ -43,6 +43,6 @@ public class UserProfileController {
     @DeleteMapping
     public void deleteUser()
     {
-
+        log.warn("User is USER");
     }
 }

@@ -10,6 +10,8 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.HttpStatusEntryPoint;
 
+import com.example.demo.Entities.UsersProfileInformation.Role;
+
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
@@ -22,8 +24,8 @@ public class SecurityConfig {
 
             .authorizeHttpRequests(auth -> auth
                     .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
+                    .requestMatchers(HttpMethod.DELETE, "/userProfile").hasAnyAuthority(Role.USER.toString())
                     .requestMatchers("/userProfile/**").permitAll()
-                    .requestMatchers(HttpMethod.DELETE, "/userProfile").hasAnyAuthority("USER")
             )
 
             .exceptionHandling(exceptions -> exceptions

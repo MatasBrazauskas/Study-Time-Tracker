@@ -15,7 +15,11 @@ export const queryClient = new QueryClient();
 import { axiosDefaultSetUp } from './Utilities/const';
 import getCookies from './APIs/getCookies';
 
+import deleteUser from './APIs/deleteUser';
+
 function App(){
+
+  axiosDefaultSetUp();
 
   const usersData = useSelector((state: RootState) => state.USERS_DATA_SLICES_NAME);
 
@@ -23,15 +27,20 @@ function App(){
     const idk = async () => {
       await getCookies();
     }
-    axiosDefaultSetUp();
     idk();
   }, []);
+
+  const onClick = async () => {
+    await deleteUser();
+  }
 
   return (
     <div>
       <LogIn />
       <div>{usersData.username}</div>
       <div>{usersData.role}</div>
+
+      <button onClick={() => onClick()}>Call API with Protected Route</button>
     </div>
   )
 }

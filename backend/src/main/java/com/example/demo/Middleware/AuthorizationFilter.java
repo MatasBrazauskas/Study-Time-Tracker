@@ -1,5 +1,6 @@
 package com.example.demo.Middleware;
 
+import com.example.demo.Entities.UsersProfileInformation;
 import com.example.demo.Services.UserProfileService;
 import com.example.demo.Utilities.CookieUtils;
 import com.example.demo.Utilities.JwtUtils;
@@ -39,8 +40,9 @@ public class AuthorizationFilter extends OncePerRequestFilter
     public void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws java.io.IOException, jakarta.servlet.ServletException {
 
         var persistentJwt = middleWareUtils.extractPersistentCookie(request);
+        var user = new UsersProfileInformation();
 
-        if(persistentJwt == null){
+        /*if(persistentJwt == null){
             var roleAuthority = new SimpleGrantedAuthority(Role.GUEST.toString());
             var authToken = new UsernamePasswordAuthenticationToken(null, null, List.of(roleAuthority));
             SecurityContextHolder.getContext().setAuthentication(authToken);
@@ -51,7 +53,16 @@ public class AuthorizationFilter extends OncePerRequestFilter
             var roleAuthority = new SimpleGrantedAuthority(user.getRole().toString());
             var authToken = new UsernamePasswordAuthenticationToken(null, null, List.of(roleAuthority));
             SecurityContextHolder.getContext().setAuthentication(authToken);
+        }*/
+
+        if(persistentJwt != null) {
+            final var email = jwtUtils.extractEmail(persistentJwt);
+            user =  userProfileService.findByEmail(email);
         }
+
+        var roleAuthority = new SimpleGrantedAuthority(user.getRole().toString());
+        var authToken = new UsernamePasswordAuthenticationToken(user, null, List.of(roleAuthority));
+        SecurityContextHolder.getContext().setAuthentication(authToken);
 
         filterChain.doFilter(request, response);
     }
