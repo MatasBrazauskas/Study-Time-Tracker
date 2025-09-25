@@ -12,6 +12,10 @@ export const setUpInterceptors = (store: AppStore) => {
     axiosAuth.interceptors.response.use(
         (response: AxiosResponse) => {
             store.dispatch(clearErrors());
+
+            console.log('Axios Interceptor');
+            console.table(response.data);
+
             return response;
         },
 
@@ -21,6 +25,10 @@ export const setUpInterceptors = (store: AppStore) => {
                     status: error.status!,
                     message: error.message!,
                 }
+
+
+                console.error('Axios Interceptor');
+                console.table(errorObj);
 
                 store.dispatch(setErrors(errorObj));
                 return Promise.resolve(errorObj);

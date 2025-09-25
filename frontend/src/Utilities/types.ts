@@ -1,11 +1,11 @@
-export type UsersInformation = {
+export type UserProfileOutput = {
     username: string,
     role: 'USER' | 'GUEST' | 'ADMIN',
     lastOnline: string,
     accCreated: string,
 }
 
-export type UsersInfo = {
+export type UserCredentials = {
     email: string,
     username: string,
 }
