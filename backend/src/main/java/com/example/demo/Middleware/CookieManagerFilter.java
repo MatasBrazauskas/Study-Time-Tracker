@@ -12,6 +12,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
+import jakarta.servlet.http.Cookie;
 
 import com.example.demo.Entities.UsersProfileInformation.Role;
 
@@ -35,34 +36,46 @@ public class CookieManagerFilter extends OncePerRequestFilter
     @Override
     public void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws java.io.IOException, jakarta.servlet.ServletException
     {
-        String sessionJwt = middleWareUtils.extractSessionCookie(request);
-        String persistentJwt = middleWareUtils.extractPersistentCookie(request);
+        final String cookieHeader = request.getHeader("Cookie");
 
-        middleWareUtils.setSessionJwt(request, response,sessionJwt);
-        middleWareUtils.setPersistentJwt(request, response, persistentJwt);
+        log.warn("Cookie header: {}", cookieHeader);
+
+        Cookie sessionCookie = middleWareUtils.extractSessionCookie(request);
+        Cookie persistentCookie = middleWareUtils.extractPersistentCookie(request);
+
+        log.error("Cookies before logical checks");
+        log.info("Session JWT: {}", sessionCookie == null ? "null" : sessionCookie.getValue());
+        log.info("Persistent JWT: {}", persistentCookie == null ? "null" : persistentCookie.getValue());
+
+        //middleWareUtils.setSessionCookie(request, response, sessionCookie);
+        //middleWareUtils.setPersistentCookie(request, response, persistentCookie);
 
         log.error("");
 
-        if(sessionJwt == null || !jwtUtils.validateToken(sessionJwt))
+        if(sessionCookie == null)// || !jwtUtils.validateToken(sessionCookie.getValue()))
         {
             var role = Role.GUEST;
 
-            if(persistentJwt != null)
+            if(persistentCookie != null)
             {
-                final var email = jwtUtils.extractEmail(persistentJwt);
+                final var email = jwtUtils.extractEmail(persistentCookie.getValue());
                 final var user = userProfileService.findByEmail(email);
                 role = user.getRole();
+
+                final var newSessionCookie = cookieUtils.SessionCookie(role);
+                middleWareUtils.setSessionCookie(request,response,newSessionCookie);
             }
 
-            final var newSessionJwt = cookieUtils.addSessionCookie(response, role);
-            middleWareUtils.setSessionJwt(request, response,newSessionJwt);
+            final var newSessionCookie = cookieUtils.SessionCookie(role);
+            middleWareUtils.setSessionCookie(request, response, newSessionCookie);
         }
 
-        sessionJwt = middleWareUtils.extractSessionCookie(request);
-        persistentJwt = middleWareUtils.extractPersistentCookie(request);
+        sessionCookie = middleWareUtils.extractSessionCookie(request);
+        persistentCookie = middleWareUtils.extractPersistentCookie(request);
 
-        log.info("Session JWT: {}", sessionJwt);
-        log.info("Persistent JWT: {}", persistentJwt);
+        log.error("Cookies after logical checks");
+        log.info("Session JWT: {}", sessionCookie == null ? "null" : sessionCookie.getValue());
+        log.info("Persistent JWT: {}", persistentCookie == null ? "null" : persistentCookie.getValue());
 
         filterChain.doFilter(request, response);
     }

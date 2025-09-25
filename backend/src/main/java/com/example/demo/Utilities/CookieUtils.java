@@ -25,39 +25,33 @@ public class CookieUtils
         this.jwtUtils = jwtUtils;
     }
 
-    public String addPersistentCookie(HttpServletResponse response, String email)
+    public Cookie PersistentCookie(String email)
     {
         final var jwtToken = jwtUtils.generatePersistentJWT(email);
-        var persistentCookie = new Cookie(PersistentCookieName, jwtToken);
+        var cookie = new Cookie(PersistentCookieName, jwtToken);
 
-        persistentCookie.setMaxAge(PERSISTENT_COOKIE_MAX_AGE);
-        persistentCookie.setPath("/");
-        persistentCookie.setHttpOnly(true);
-        persistentCookie.setDomain("localhost");
-        persistentCookie.setAttribute("SameSite", "Lax");
+        cookie.setMaxAge(PERSISTENT_COOKIE_MAX_AGE);
+        cookie.setPath("/");
+        cookie.setHttpOnly(true);
+        cookie.setAttribute("SameSite", "Lax");
 
-        response.addCookie(persistentCookie);
-
-        return jwtToken;
+        return cookie;
     }
 
-    public String addSessionCookie(HttpServletResponse response, Role role)
+    public Cookie SessionCookie(Role role)
     {
         final var jwtToken = jwtUtils.generateSessionJWT(role.toString());
-        var sessionCookie = new Cookie(SessionsCookieName, jwtToken);
+        var cookie = new Cookie(SessionsCookieName, jwtToken);
 
-        sessionCookie.setPath("/");
-        sessionCookie.setHttpOnly(true);
-        sessionCookie.setDomain("localhost");
-        sessionCookie.setAttribute("SameSite", "Lax");
+        cookie.setPath("/");
+        cookie.setHttpOnly(true);
+        cookie.setAttribute("SameSite", "Lax");
 
-        response.addCookie(sessionCookie);
-
-        return jwtToken;
+        return cookie;
     }
 
-    public ResponseEntity<Void> deletePersistentCookie(HttpServletResponse response){
-        this.addSessionCookie(response, Role.GUEST);
+    /*public ResponseEntity<Void> deletePersistentCookie(HttpServletResponse response){
+        //this.SessionCookie(response, Role.GUEST);
 
         var deleteCookie = new Cookie(PersistentCookieName, "");
 
@@ -69,5 +63,5 @@ public class CookieUtils
         response.addCookie(deleteCookie);
 
         return ResponseEntity.ok().build();
-    }
+    }*/
 }

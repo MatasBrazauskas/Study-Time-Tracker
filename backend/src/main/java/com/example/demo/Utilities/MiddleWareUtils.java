@@ -13,7 +13,7 @@ public final class MiddleWareUtils
     public static final String SessionsCookieName = "sessionCookie";
     public static final String PersistentCookieName = "persistentCookie";
 
-    public String extractSessionCookie(final HttpServletRequest request)
+    public Cookie extractSessionCookie(final HttpServletRequest request)
     {
         if(request.getCookies() == null) {
             log.info("Session cookies are empty");
@@ -24,11 +24,11 @@ public final class MiddleWareUtils
         {
             log.warn(cookie.getName());
             if(cookie.getName().equals(SessionsCookieName))
-                return cookie.getValue();
+                return cookie;
         }
         return null;
     }
-    public String extractPersistentCookie(final HttpServletRequest request) {
+    public Cookie extractPersistentCookie(final HttpServletRequest request) {
         if(request.getCookies() == null) {
             log.info("Persistent cookies are empty");
             return null;
@@ -37,21 +37,23 @@ public final class MiddleWareUtils
         for(Cookie cookie : request.getCookies())
         {
             if(cookie.getName().equals(PersistentCookieName))
-                return cookie.getValue();
+                return cookie;
         }
         return null;
     }
 
-    public void setSessionJwt(HttpServletRequest request, HttpServletResponse response, final String sessionJwt)
+    public void setSessionCookie(HttpServletRequest request, HttpServletResponse response, final Cookie sessionCookie)
     {
-        request.setAttribute(SessionsCookieName, sessionJwt);
-        if(sessionJwt != null)
-            response.addCookie(new Cookie(SessionsCookieName, sessionJwt));
+        if(sessionCookie != null){
+            request.setAttribute(SessionsCookieName, sessionCookie);
+            response.addCookie(sessionCookie);
+        }
     }
-     public void setPersistentJwt(HttpServletRequest request, HttpServletResponse response, final String persistentJwt)
+     public void setPersistentCookie(HttpServletRequest request, HttpServletResponse response, final Cookie persistentCookie)
      {
-         request.setAttribute(PersistentCookieName, persistentJwt);
-         if(persistentJwt != null)
-            response.addCookie(new Cookie(PersistentCookieName, persistentJwt));
+         if (persistentCookie != null) {
+             request.setAttribute(PersistentCookieName, persistentCookie.getValue());
+             response.addCookie(persistentCookie);
+         }
      }
 }
