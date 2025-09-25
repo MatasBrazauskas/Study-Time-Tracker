@@ -1,19 +1,16 @@
 package com.example.demo.Controllers;
 
-import com.example.demo.DTOs.CreateUserProfile;
+import com.example.demo.DTOs.UserCredentials;
 import com.example.demo.DTOs.UserProfileOutput;
-import com.example.demo.Entities.UsersProfileInformation;
-import com.example.demo.Exceptions.CustomExceptions;
+import com.example.demo.Entities.UsersProfile;
 import com.example.demo.Services.UserProfileService;
-import com.example.demo.Utilities.CookieUtils;
 import com.example.demo.Utilities.JwtUtils;
 import com.example.demo.Utilities.MiddleWareUtils;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.coyote.Response;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 @Slf4j
@@ -33,17 +30,17 @@ public class UserProfileController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<UserProfileOutput> RegisterUser(HttpServletRequest request, HttpServletResponse response, @RequestBody CreateUserProfile  createUserProfile)
+    public ResponseEntity<UserProfileOutput> RegisterUser(HttpServletRequest request, HttpServletResponse response, @RequestBody UserCredentials userCredentials)
     {
         log.info("UserProfileController: register user");
-        return userProfileService.registerInDb(request, response, createUserProfile);
+        return userProfileService.registerInDb(request, response, userCredentials);
     }
 
     @PostMapping("/logIn")
-    public ResponseEntity<UserProfileOutput> LogInTheUser(HttpServletRequest request, HttpServletResponse response, @RequestBody CreateUserProfile  createUserProfile)
+    public ResponseEntity<UserProfileOutput> LogInTheUser(HttpServletRequest request, HttpServletResponse response, @RequestBody UserCredentials userCredentials)
     {
         log.info("User profile controller: log in");
-        return userProfileService.retrieveUsersData(request, response, createUserProfile);
+        return userProfileService.retrieveUsersData(request, response, userCredentials);
     }
 
     @GetMapping
@@ -61,8 +58,9 @@ public class UserProfileController {
     }
 
     @DeleteMapping
-    public void deleteUser()
+    public ResponseEntity<UserProfileOutput> deleteUser(HttpServletResponse response, @AuthenticationPrincipal UsersProfile usersProfile)
     {
-        log.warn("User is USER");
+        log.warn("Deleting the user");
+        return userProfileService.deleteUser(response, usersProfile);
     }
 }

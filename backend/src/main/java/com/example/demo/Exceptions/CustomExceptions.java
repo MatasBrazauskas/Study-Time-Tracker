@@ -13,4 +13,10 @@ public final class CustomExceptions
             super("Register Error");
         }
     }
+
+    public static final class UserNotFound extends RuntimeException {
+        public UserNotFound() {
+            super("User Not Found");
+        }
+    }
 }

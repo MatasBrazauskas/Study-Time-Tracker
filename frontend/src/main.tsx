@@ -1,10 +1,10 @@
-import { lazy, StrictMode, useEffect } from 'react'
+import { lazy, StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
+import { BrowserRouter, Outlet, Routes, Route } from 'react-router-dom';
 
-import { Provider, useSelector } from 'react-redux';
-import store, { type RootState } from './Store/store';
+import { Provider } from 'react-redux';
+import store from './Store/store';
 
-const LogIn = lazy(() => import('./Login'));
 import { GOOGLE_CLIENT_ID } from './Utilities/const';
 import './main.css';
 import { GoogleOAuthProvider } from '@react-oauth/google';
@@ -12,42 +12,42 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 
 export const queryClient = new QueryClient();
 
-import getCookies from './APIs/getCookies';
-
-import deleteUser from './APIs/deleteUser';
+import { getUsersProfile, deleteUser } from './APIs/userProfileAPIs';
 
 import { setUpInterceptors } from './Utilities/fetchSettings';
+import TopBar from './TopBarPage';
+
 setUpInterceptors(store);
 
-function App(){
+const LogInPage = lazy(() => import('./LoginPage'));
 
-  const usersData = useSelector((state: RootState) => state.USERS_DATA_SLICES_NAME);
-
-  useEffect(() => {
-    const idk = async () => {
-      await getCookies();
-    }
-    idk();
-  }, []);
-
-  const onClick = async () => {
-    await deleteUser();
-  }
+function MainPage(){
 
   return (
     <div>
-      <LogIn />
-      <div>{usersData.username}</div>
-      <div>{usersData.role}</div>
+      <TopBar />
 
-      <button onClick={() => onClick()}>Call API with Protected Route</button>
-      <button onClick={() => getCookies()}>Just Call API</button>
+      <button onClick={() => deleteUser()}>Call API with Protected Route</button>
+      <button onClick={() => getUsersProfile()}>Just Call API</button>
+
+      <Outlet />
     </div>
   )
 }
 
-function MainPage(){
-    
+
+function App(){
+
+  return (
+    <div>
+      <BrowserRouter>
+        <Routes>
+          <Route path='/' element={<MainPage/>}/>
+            <Route path='login' element={<LogInPage/>}/>
+        </Routes>
+      </BrowserRouter>
+    </div>
+  )
 }
 
 createRoot(document.getElementById('root')!).render(

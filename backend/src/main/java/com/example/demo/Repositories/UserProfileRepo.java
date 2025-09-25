@@ -1,15 +1,12 @@
 package com.example.demo.Repositories;
 
-import com.example.demo.DTOs.CreateUserProfile;
-import com.example.demo.Entities.UsersProfileInformation;
+import com.example.demo.Entities.UsersProfile;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import java.util.Optional;
 
 @Repository
-public interface UserProfileRepo extends JpaRepository<UsersProfileInformation, Long>
+public interface UserProfileRepo extends JpaRepository<UsersProfile, Long>
 {
-    Optional<UsersProfileInformation> findByEmail(String email);
+    Optional<UsersProfile> findByEmail(String email);
 }

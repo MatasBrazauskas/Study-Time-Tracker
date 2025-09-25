@@ -1,20 +1,17 @@
 package com.example.demo.Services;
 
-import com.example.demo.DTOs.CreateUserProfile;
+import com.example.demo.DTOs.UserCredentials;
 import com.example.demo.DTOs.UserProfileOutput;
-import com.example.demo.Entities.UsersProfileInformation;
+import com.example.demo.Entities.UsersProfile;
 import com.example.demo.Repositories.UserProfileRepo;
 import com.example.demo.Utilities.CookieUtils;
 import com.example.demo.Utilities.MiddleWareUtils;
-import jakarta.persistence.EntityNotFoundException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import org.apache.coyote.Response;
-import org.aspectj.weaver.loadtime.definition.Definition;
+import lombok.val;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import java.util.Optional;
 import com.example.demo.Exceptions.CustomExceptions;
 
 @Service
@@ -33,12 +30,12 @@ public class UserProfileService
         this.middleWareUtils = middleWareUtils;
     }
 
-    public ResponseEntity<UserProfileOutput> registerInDb(HttpServletRequest request, HttpServletResponse response, CreateUserProfile createUserProfile)
+    public ResponseEntity<UserProfileOutput> registerInDb(HttpServletRequest request, HttpServletResponse response, UserCredentials userCredentials)
     {
-        boolean userDoNotExists = userProfileRepo.findByEmail(createUserProfile.getEmail()).isEmpty();
+        boolean userDoNotExists = userProfileRepo.findByEmail(userCredentials.getEmail()).isEmpty();
 
         if(userDoNotExists){
-            var createdUser = userProfileRepo.save(new  UsersProfileInformation(createUserProfile));
+            var createdUser = userProfileRepo.save(new UsersProfile(userCredentials));
 
             final var sessionCookie = cookieUtils.SessionCookie(createdUser.getRole());
             final var persistentCookie = cookieUtils.PersistentCookie(createdUser.getEmail());
@@ -51,9 +48,9 @@ public class UserProfileService
         throw new CustomExceptions.LogInException();
     }
 
-    public ResponseEntity<UserProfileOutput> retrieveUsersData(HttpServletRequest request, HttpServletResponse response, CreateUserProfile createUserProfile)
+    public ResponseEntity<UserProfileOutput> retrieveUsersData(HttpServletRequest request, HttpServletResponse response, UserCredentials userCredentials)
     {
-        var user = userProfileRepo.findByEmail(createUserProfile.getEmail());
+        var user = userProfileRepo.findByEmail(userCredentials.getEmail());
 
         if(user.isEmpty() == false){
             final var sessionCookie = cookieUtils.SessionCookie(user.get().getRole());
@@ -67,7 +64,18 @@ public class UserProfileService
         throw new CustomExceptions.LogInException();
     }
 
-    public UsersProfileInformation findByEmail(final String email){
-        return userProfileRepo.findByEmail(email).get();
+    public UsersProfile findByEmail(final String email){
+        return userProfileRepo.findByEmail(email).orElseThrow(() -> new CustomExceptions.UserNotFound());
+    }
+
+    public ResponseEntity<UserProfileOutput> deleteUser(HttpServletResponse response, UsersProfile userProfile){
+        if(userProfile == null){
+            throw new CustomExceptions.UserNotFound();
+        }
+
+        userProfileRepo.delete(userProfile);
+        cookieUtils.deleteCookies(response);
+
+        return ResponseEntity.ok(new UserProfileOutput());
     }
 }

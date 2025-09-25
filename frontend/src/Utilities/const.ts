@@ -4,5 +4,9 @@ export const USER_PROFILE_CONTROLLER_URL:string = import.meta.env.VITE_USER_PROF
 export const REGISTER_CONTROLLER_URL = `${USER_PROFILE_CONTROLLER_URL}/register`;
 export const LOG_IN_CONTROLLER_URL = `${USER_PROFILE_CONTROLLER_URL}/logIn`;
 
+
 export const USERS_DATA_SLICES_NAME = 'usersData';
 export const ERRORS_SLICES_NAME = 'errorsData';
+
+
+export const USER_PROFILE_QUERY_KEY = 'userProfile';

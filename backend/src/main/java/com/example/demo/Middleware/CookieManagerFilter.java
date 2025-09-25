@@ -1,6 +1,5 @@
 package com.example.demo.Middleware;
 
-import com.example.demo.Entities.UsersProfileInformation;
 import com.example.demo.Services.UserProfileService;
 import com.example.demo.Utilities.CookieUtils;
 import com.example.demo.Utilities.JwtUtils;
@@ -14,7 +13,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 import jakarta.servlet.http.Cookie;
 
-import com.example.demo.Entities.UsersProfileInformation.Role;
+import com.example.demo.Entities.UsersProfile.Role;
 
 @Order(1)
 @Slf4j
@@ -43,16 +42,7 @@ public class CookieManagerFilter extends OncePerRequestFilter
         Cookie sessionCookie = middleWareUtils.extractSessionCookie(request);
         Cookie persistentCookie = middleWareUtils.extractPersistentCookie(request);
 
-        log.error("Cookies before logical checks");
-        log.info("Session JWT: {}", sessionCookie == null ? "null" : sessionCookie.getValue());
-        log.info("Persistent JWT: {}", persistentCookie == null ? "null" : persistentCookie.getValue());
-
-        //middleWareUtils.setSessionCookie(request, response, sessionCookie);
-        //middleWareUtils.setPersistentCookie(request, response, persistentCookie);
-
-        log.error("");
-
-        if(sessionCookie == null)// || !jwtUtils.validateToken(sessionCookie.getValue()))
+        if(sessionCookie == null || !jwtUtils.validateToken(sessionCookie.getValue()))
         {
             var role = Role.GUEST;
 

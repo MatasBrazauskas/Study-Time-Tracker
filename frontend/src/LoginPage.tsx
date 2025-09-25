@@ -1,25 +1,10 @@
 import { GoogleLogin, type CredentialResponse } from "@react-oauth/google";
-import { useDispatch } from "react-redux";
-import { useMutation } from "@tanstack/react-query";
 import { jwtDecode } from "jwt-decode";
 
-import { LogInUser, RegisterUser } from "./APIs/logInRegister";
+import { LogInUser, RegisterUser } from "./APIs/userProfileAPIs";
 
 function LogIn()
 {
-    /*const { mutate, isError, error} = useMutation({
-        mutationFn: async (obj: CredentialResponse) => {
-            const decodedObject: any = jwtDecode(obj.credential!);
-            const usersInfo: Pick<typeof decodedObject, "email" | "name"> = {
-                email: decodedObject.email!,
-                name: decodedObject.name!,
-            }
-            
-            const data = await LogInUser(usersInfo);
-            console.table(data);
-        }
-    });*/
-
     const logIn = async (obj: CredentialResponse) => {
         const decodedObject: any = jwtDecode(obj.credential!);
         const usersInfo: Pick<typeof decodedObject, "email" | "username"> = {

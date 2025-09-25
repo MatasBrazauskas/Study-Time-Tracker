@@ -1,10 +1,10 @@
 package com.example.demo.DTOs;
 
-import com.example.demo.Entities.UsersProfileInformation;
+import com.example.demo.Entities.UsersProfile;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
-import com.example.demo.Entities.UsersProfileInformation.Role;
+import com.example.demo.Entities.UsersProfile.Role;
 
 import java.time.LocalDate;
 
@@ -16,7 +16,14 @@ public class UserProfileOutput {
     private LocalDate lastOnline;
     private LocalDate accCreated;
 
-    public UserProfileOutput(UsersProfileInformation userProfileInformation) {
+    public UserProfileOutput() {
+        this.username = Role.USER.toString();
+        this.role = Role.GUEST;
+        this.lastOnline = LocalDate.now();
+        this.accCreated = LocalDate.now();
+    }
+
+    public UserProfileOutput(UsersProfile userProfileInformation) {
         this.username = userProfileInformation.getUsername();
         this.role = userProfileInformation.getRole();
         this.lastOnline = userProfileInformation.getLastOnline();

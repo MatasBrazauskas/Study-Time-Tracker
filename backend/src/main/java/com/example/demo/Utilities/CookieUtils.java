@@ -7,7 +7,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 
-import com.example.demo.Entities.UsersProfileInformation.Role;
+import com.example.demo.Entities.UsersProfile.Role;
 import static com.example.demo.Utilities.MiddleWareUtils.SessionsCookieName;
 import static com.example.demo.Utilities.MiddleWareUtils.PersistentCookieName;
 
@@ -50,18 +50,17 @@ public class CookieUtils
         return cookie;
     }
 
-    /*public ResponseEntity<Void> deletePersistentCookie(HttpServletResponse response){
-        //this.SessionCookie(response, Role.GUEST);
+    public void deleteCookies(HttpServletResponse response){
+        final var sessionCookie = this.SessionCookie(Role.GUEST);
 
-        var deleteCookie = new Cookie(PersistentCookieName, "");
+        var persistentCookie = new Cookie(PersistentCookieName, "");
 
-        deleteCookie.setPath("/");
-        deleteCookie.setHttpOnly(true);
-        deleteCookie.setDomain("localhost");
-        deleteCookie.setMaxAge(0);
+        persistentCookie.setPath("/");
+        persistentCookie.setHttpOnly(true);
+        persistentCookie.setDomain("localhost");
+        persistentCookie.setMaxAge(0);
 
-        response.addCookie(deleteCookie);
-
-        return ResponseEntity.ok().build();
-    }*/
+        response.addCookie(sessionCookie);
+        response.addCookie(persistentCookie);
+    }
 }
