@@ -12,8 +12,12 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 
 export const queryClient = new QueryClient();
 
-import { axiosDefaultSetUp } from './Utilities/const';
 import getCookies from './APIs/getCookies';
+
+import deleteUser from './APIs/deleteUser';
+
+import { setUpInterceptors } from './Utilities/fetchSettings';
+setUpInterceptors(store);
 
 function App(){
 
@@ -23,17 +27,27 @@ function App(){
     const idk = async () => {
       await getCookies();
     }
-    axiosDefaultSetUp();
     idk();
   }, []);
+
+  const onClick = async () => {
+    await deleteUser();
+  }
 
   return (
     <div>
       <LogIn />
       <div>{usersData.username}</div>
       <div>{usersData.role}</div>
+
+      <button onClick={() => onClick()}>Call API with Protected Route</button>
+      <button onClick={() => getCookies()}>Just Call API</button>
     </div>
   )
+}
+
+function MainPage(){
+    
 }
 
 createRoot(document.getElementById('root')!).render(

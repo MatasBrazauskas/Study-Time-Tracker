@@ -2,45 +2,58 @@ package com.example.demo.Utilities;
 
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
+@Slf4j
 @Component
 public final class MiddleWareUtils
 {
     public static final String SessionsCookieName = "sessionCookie";
     public static final String PersistentCookieName = "persistentCookie";
 
-    public String extractSessionCookie(HttpServletRequest request)
+    public Cookie extractSessionCookie(final HttpServletRequest request)
     {
-        if(request.getSession(false) == null)
+        if(request.getCookies() == null) {
+            log.info("Session cookies are empty");
             return null;
+        }
 
         for(Cookie cookie : request.getCookies())
         {
+            log.warn(cookie.getName());
             if(cookie.getName().equals(SessionsCookieName))
-                return cookie.getValue();
+                return cookie;
         }
         return null;
     }
-    public String extractPersistentCookie(HttpServletRequest request)
-    {
-        if(request.getSession(false) == null)
+    public Cookie extractPersistentCookie(final HttpServletRequest request) {
+        if(request.getCookies() == null) {
+            log.info("Persistent cookies are empty");
             return null;
+        }
 
         for(Cookie cookie : request.getCookies())
         {
             if(cookie.getName().equals(PersistentCookieName))
-                return cookie.getValue();
+                return cookie;
         }
         return null;
     }
 
-    public void setSessionJwt(HttpServletRequest request, final String sessionJwt)
+    public void setSessionCookie(HttpServletRequest request, HttpServletResponse response, final Cookie sessionCookie)
     {
-        request.setAttribute(SessionsCookieName, sessionJwt);
+        if(sessionCookie != null){
+            request.setAttribute(SessionsCookieName, sessionCookie);
+            response.addCookie(sessionCookie);
+        }
     }
-     public void setPersistentJwt(HttpServletRequest request, final String persistentJwt)
+     public void setPersistentCookie(HttpServletRequest request, HttpServletResponse response, final Cookie persistentCookie)
      {
-         request.setAttribute(PersistentCookieName, persistentJwt);
+         if (persistentCookie != null) {
+             request.setAttribute(PersistentCookieName, persistentCookie.getValue());
+             response.addCookie(persistentCookie);
+         }
      }
 }

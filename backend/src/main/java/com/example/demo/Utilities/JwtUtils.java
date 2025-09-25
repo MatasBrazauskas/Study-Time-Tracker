@@ -31,9 +31,9 @@ public class JwtUtils {
     }
 
     public String extractEmail(String token) {
-        log.warn(token);
+        /*log.warn(token);
         log.info(token.substring(7));
-        log.warn(token.substring(8));
+        log.warn(token.substring(8));*/
         return extractClaim(token, claims -> claims.get("email").toString());
     }
 

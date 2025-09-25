@@ -15,7 +15,6 @@ import java.time.LocalDate;
 @Entity
 @Table(name = "UserProfile", indexes = {@Index(columnList = "email")})
 @Data
-@NoArgsConstructor
 public class UsersProfileInformation
 {
     private static final int MAX_USERNAME_LENGTH = 255;
@@ -45,6 +44,13 @@ public class UsersProfileInformation
     @UpdateTimestamp
     @Column(nullable = false, columnDefinition = "DATE DEFAULT(CURRENT_DATE)")
     private LocalDate lastOnline;
+
+    public UsersProfileInformation(){
+        this.username = this.email = "";
+        this.role = Role.GUEST;
+        this.accCreated = LocalDate.now();
+        this.lastOnline = LocalDate.now();
+    }
 
     public UsersProfileInformation(CreateUserProfile newUser)
     {
