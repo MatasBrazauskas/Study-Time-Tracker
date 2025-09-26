@@ -5,8 +5,8 @@ import { type UserProfileOutput} from "../Utilities/types";
 const initialState: UserProfileOutput= {
     username: 'GUEST',
     role: 'GUEST',
-    lastOnline: new Date().toLocaleDateString('en-CA'),
-    accCreated: new Date().toLocaleDateString('en-CA'), 
+    //lastOnline: new Date().toLocaleDateString('en-CA'),
+    //accCreated: new Date().toLocaleDateString('en-CA'), 
 }
 
 const usersSlice = createSlice({

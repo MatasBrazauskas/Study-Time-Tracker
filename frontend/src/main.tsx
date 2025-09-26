@@ -10,7 +10,13 @@ import './main.css';
 import { GoogleOAuthProvider } from '@react-oauth/google';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 
-export const queryClient = new QueryClient();
+export const queryClient = new QueryClient({
+  defaultOptions:{
+    queries:{
+      staleTime: 60 * 5,
+    }
+  }
+});
 
 import { getUsersProfile, deleteUser } from './APIs/userProfileAPIs';
 

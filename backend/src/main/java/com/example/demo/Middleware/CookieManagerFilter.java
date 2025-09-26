@@ -35,12 +35,11 @@ public class CookieManagerFilter extends OncePerRequestFilter
     @Override
     public void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws java.io.IOException, jakarta.servlet.ServletException
     {
-        final String cookieHeader = request.getHeader("Cookie");
+        final var sessionCookie = middleWareUtils.extractSessionCookie(request);
+        final var persistentCookie = middleWareUtils.extractPersistentCookie(request);
 
-        log.warn("Cookie header: {}", cookieHeader);
-
-        Cookie sessionCookie = middleWareUtils.extractSessionCookie(request);
-        Cookie persistentCookie = middleWareUtils.extractPersistentCookie(request);
+        log.info("Session JWT: {}", sessionCookie == null ? "null" : sessionCookie.getValue());
+        log.info("Persistent JWT: {}", persistentCookie == null ? "null" : persistentCookie.getValue());
 
         if(sessionCookie == null || !jwtUtils.validateToken(sessionCookie.getValue()))
         {
@@ -59,13 +58,6 @@ public class CookieManagerFilter extends OncePerRequestFilter
             final var newSessionCookie = cookieUtils.SessionCookie(role);
             middleWareUtils.setSessionCookie(request, response, newSessionCookie);
         }
-
-        sessionCookie = middleWareUtils.extractSessionCookie(request);
-        persistentCookie = middleWareUtils.extractPersistentCookie(request);
-
-        log.error("Cookies after logical checks");
-        log.info("Session JWT: {}", sessionCookie == null ? "null" : sessionCookie.getValue());
-        log.info("Persistent JWT: {}", persistentCookie == null ? "null" : persistentCookie.getValue());
 
         filterChain.doFilter(request, response);
     }

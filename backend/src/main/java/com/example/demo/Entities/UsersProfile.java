@@ -2,7 +2,10 @@ package com.example.demo.Entities;
 
 import com.example.demo.DTOs.UserCredentials;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
@@ -11,6 +14,9 @@ import java.time.LocalDate;
 @Entity
 @Table(name = "UserProfile", indexes = {@Index(columnList = "email")})
 @Data
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 public class UsersProfile
 {
     private static final int MAX_USERNAME_LENGTH = 255;
@@ -24,14 +30,16 @@ public class UsersProfile
     private Long id;
 
     @Column(nullable = false, length = MAX_USERNAME_LENGTH)
-    private String username;
+    @Builder.Default
+    private String username = Role.GUEST.toString();
 
     @Column(nullable = false, unique = true)
     private String email;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false, columnDefinition = "ENUM('USER', 'GUEST')")
-    private Role role;
+    @Builder.Default
+    private Role role = Role.USER;
 
     @CreationTimestamp
     @Column(nullable = false, columnDefinition = "DATE DEFAULT(CURRENT_DATE)")
@@ -40,13 +48,6 @@ public class UsersProfile
     @UpdateTimestamp
     @Column(nullable = false, columnDefinition = "DATE DEFAULT(CURRENT_DATE)")
     private LocalDate lastOnline;
-
-    public UsersProfile(){
-        this.username = this.email = "";
-        this.role = Role.GUEST;
-        this.accCreated = LocalDate.now();
-        this.lastOnline = LocalDate.now();
-    }
 
     public UsersProfile(UserCredentials newUser)
     {

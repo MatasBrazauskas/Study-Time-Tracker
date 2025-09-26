@@ -1,5 +1,6 @@
 package com.example.demo.Middleware;
 
+import com.example.demo.DTOs.UserCredentials;
 import com.example.demo.Entities.UsersProfile;
 import com.example.demo.Services.UserProfileService;
 import com.example.demo.Utilities.CookieUtils;
@@ -8,6 +9,7 @@ import com.example.demo.Utilities.MiddleWareUtils;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.annotation.Order;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -17,6 +19,7 @@ import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.util.List;
 
+@Slf4j
 @Order(2)
 @Component
 public class AuthorizationFilter extends OncePerRequestFilter
@@ -36,7 +39,7 @@ public class AuthorizationFilter extends OncePerRequestFilter
     @Override
     public void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws java.io.IOException, jakarta.servlet.ServletException {
 
-        var persistentCookie = middleWareUtils.extractPersistentCookie(request);
+        final var persistentCookie = middleWareUtils.extractPersistentCookie(request);
         var user = new UsersProfile();
 
         if(persistentCookie != null) {
@@ -48,8 +51,7 @@ public class AuthorizationFilter extends OncePerRequestFilter
         var authToken = new UsernamePasswordAuthenticationToken(user, null, List.of(roleAuthority));
         SecurityContextHolder.getContext().setAuthentication(authToken);
 
-        logger.error("");
-        logger.error(user.getRole().toString());
+        log.warn("Users role: {}", user.getRole().toString());
 
         filterChain.doFilter(request, response);
     }

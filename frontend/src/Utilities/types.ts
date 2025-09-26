@@ -1,8 +1,8 @@
 export type UserProfileOutput = {
     username: string,
     role: 'USER' | 'GUEST' | 'ADMIN',
-    lastOnline: string,
-    accCreated: string,
+    lastOnline?: string,
+    accCreated?: string,
 }
 
 export type UserCredentials = {

@@ -15,10 +15,7 @@ public final class MiddleWareUtils
 
     public Cookie extractSessionCookie(final HttpServletRequest request)
     {
-        if(request.getCookies() == null) {
-            log.info("Session cookies are empty");
-            return null;
-        }
+        if(request.getCookies() == null) return null;
 
         for(Cookie cookie : request.getCookies())
         {
@@ -29,10 +26,7 @@ public final class MiddleWareUtils
         return null;
     }
     public Cookie extractPersistentCookie(final HttpServletRequest request) {
-        if(request.getCookies() == null) {
-            log.info("Persistent cookies are empty");
-            return null;
-        }
+        if(request.getCookies() == null) return null;
 
         for(Cookie cookie : request.getCookies())
         {

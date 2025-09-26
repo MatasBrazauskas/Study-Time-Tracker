@@ -2,26 +2,26 @@ package com.example.demo.DTOs;
 
 import com.example.demo.Entities.UsersProfile;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
-
-import com.example.demo.Entities.UsersProfile.Role;
-
 import java.time.LocalDate;
 
+import com.example.demo.Entities.UsersProfile.Role;
+import lombok.NoArgsConstructor;
+
 @Data
+@Builder
 @AllArgsConstructor
+@NoArgsConstructor
 public class UserProfileOutput {
-    private String username;
-    private Role role;
+    @Builder.Default
+    private String username = Role.GUEST.toString();
+
+    @Builder.Default
+    private Role role = Role.GUEST;
+
     private LocalDate lastOnline;
     private LocalDate accCreated;
-
-    public UserProfileOutput() {
-        this.username = Role.USER.toString();
-        this.role = Role.GUEST;
-        this.lastOnline = LocalDate.now();
-        this.accCreated = LocalDate.now();
-    }
 
     public UserProfileOutput(UsersProfile userProfileInformation) {
         this.username = userProfileInformation.getUsername();
