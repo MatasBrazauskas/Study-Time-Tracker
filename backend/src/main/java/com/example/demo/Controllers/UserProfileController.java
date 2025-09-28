@@ -1,5 +1,6 @@
 package com.example.demo.Controllers;
 
+import com.example.demo.DTOs.AuthUserProfile;
 import com.example.demo.DTOs.UserCredentials;
 import com.example.demo.DTOs.UserProfileOutput;
 import com.example.demo.Entities.UsersProfile;
@@ -43,7 +44,7 @@ public class UserProfileController {
     }
 
     @DeleteMapping
-    public ResponseEntity<UserProfileOutput> deleteUser(HttpServletResponse response, @AuthenticationPrincipal UsersProfile usersProfile)
+    public ResponseEntity<UserProfileOutput> deleteUser(HttpServletResponse response, @AuthenticationPrincipal AuthUserProfile usersProfile)
     {
         log.warn("Deleting the user");
         return userProfileService.deleteUser(response, usersProfile);

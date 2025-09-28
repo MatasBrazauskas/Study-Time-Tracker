@@ -1,9 +1,16 @@
 export type UserProfileOutput = {
     username: string,
-    role: 'USER' | 'GUEST' | 'ADMIN',
+    role: Roles
     lastOnline?: string,
     accCreated?: string,
 }
+
+export const RoleValues = {
+    USER: 'USER',
+    GUEST: 'GUEST',
+} as const;
+
+export type Roles = typeof RoleValues[keyof typeof RoleValues];
 
 export type UserCredentials = {
     email: string,
