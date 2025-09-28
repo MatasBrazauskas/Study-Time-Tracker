@@ -27,38 +27,8 @@ function LogIn()
         navigation('/activity')
     }
 
-    /*const logIn = async (obj: CredentialResponse) => {
-        const decodedObject: any = jwtDecode(obj.credential!);
-        const usersInfo: Pick<typeof decodedObject, "email" | "username"> = {
-            email: decodedObject.email!,
-            username: decodedObject.name!,
-        }
-        
-        const data = await LogInUser(usersInfo);
-
-        dispatch(setUsersInfo(data));
-        navigation('/activity')
-    }
-
-    const register = async (obj: CredentialResponse) => {
-        const decodedObject: any = jwtDecode(obj.credential!);
-        const usersInfo: Pick<typeof decodedObject, "email" | "username"> = {
-            email: decodedObject.email!,
-            username: decodedObject.name!,
-        }
-        
-        const data = await RegisterUser(usersInfo)
-
-        dispatch(setUsersInfo(data));
-        navigation('/activity')
-    }*/
-
-    
-
     return (
         <div>
-            {/*<GoogleLogin onSuccess={(e) => logIn(e)}></GoogleLogin>
-            <GoogleLogin onSuccess={(e) => register(e)}></GoogleLogin>*/}
             {<div>Current mode: {mode}</div>}
             <GoogleLogin onSuccess={(e) => apiCall(e)} />
             <button onClick={() => increment()}>Swithc API call method</button>

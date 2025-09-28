@@ -42,13 +42,13 @@ public class UserProfileService
         if(persistentCookie == null) return ResponseEntity.ok(new UserProfileOutput());
 
         final var email = jwtUtils.extractEmail(persistentCookie.getValue());
-        final var user = userProfileRepo.findByEmail(email).orElseThrow(() -> new CustomExceptions.UserNotFound());
+        final var user = this.findByEmail(email);
         return ResponseEntity.ok(new UserProfileOutput(user));
     }
 
     public ResponseEntity<UserProfileOutput> registerUser(HttpServletRequest request, HttpServletResponse response, UserCredentials userCredentials)
     {
-        boolean userExists = userProfileRepo.findByEmail(userCredentials.getEmail()).isEmpty();
+        boolean userExists = !userProfileRepo.findByEmail(userCredentials.getEmail()).isEmpty();
 
         if(userExists) return ResponseEntity.ok(new UserProfileOutput());
 
