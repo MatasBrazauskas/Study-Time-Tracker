@@ -1,12 +1,10 @@
 import { createSlice, type PayloadAction } from "@reduxjs/toolkit";
 import { USERS_DATA_SLICES_NAME } from "../Utilities/const";
-import { type UserProfileOutput} from "../Utilities/types";
+import { type UserProfileOutput, RoleValues} from "../Utilities/types";
 
 const initialState: UserProfileOutput= {
     username: 'GUEST',
-    role: 'GUEST',
-    //lastOnline: new Date().toLocaleDateString('en-CA'),
-    //accCreated: new Date().toLocaleDateString('en-CA'), 
+    role: RoleValues.GUEST,
 }
 
 const usersSlice = createSlice({

@@ -1,5 +1,6 @@
 package com.example.demo.Middleware;
 
+import com.example.demo.DTOs.AuthUserProfile;
 import com.example.demo.DTOs.UserCredentials;
 import com.example.demo.Entities.UsersProfile;
 import com.example.demo.Services.UserProfileService;
@@ -40,11 +41,12 @@ public class AuthorizationFilter extends OncePerRequestFilter
     public void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws java.io.IOException, jakarta.servlet.ServletException {
 
         final var persistentCookie = middleWareUtils.extractPersistentCookie(request);
-        var user = new UsersProfile();
+        AuthUserProfile user = new AuthUserProfile();
 
         if(persistentCookie != null) {
             final var email = jwtUtils.extractEmail(persistentCookie.getValue());
-            user =  userProfileService.findByEmail(email);
+            final var dbUser =  userProfileService.findByEmail(email);
+            user = new AuthUserProfile(dbUser.getUsername(), dbUser.getEmail(), dbUser.getRole());
         }
 
         var roleAuthority = new SimpleGrantedAuthority(user.getRole().toString());

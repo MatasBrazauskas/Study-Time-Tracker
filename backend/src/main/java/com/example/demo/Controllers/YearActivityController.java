@@ -2,6 +2,9 @@ package com.example.demo.Controllers;
 
 import com.example.demo.Services.YearActivityService;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -16,5 +19,9 @@ public class YearActivityController {
         this.yearService = yearService;
     }
 
-    public 
+    @GetMapping
+    public ResponseEntity<?> getYearsActivity(@RequestBody int year){
+        log.info("getYearsActivity");
+        return ResponseEntity.ok().build();
+    }
 }

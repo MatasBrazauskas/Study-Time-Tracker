@@ -18,7 +18,7 @@ export const queryClient = new QueryClient({
   }
 });
 
-import { getUsersProfile, deleteUser } from './APIs/userProfileAPIs';
+//import { getUsersProfile, deleteUser } from './APIs/userProfileAPIs';
 
 import { setUpInterceptors } from './Utilities/fetchSettings';
 import TopBar from './TopBarPage';
@@ -26,6 +26,7 @@ import TopBar from './TopBarPage';
 setUpInterceptors(store);
 
 const LogInPage = lazy(() => import('./LoginPage'));
+const UserActivityPage = lazy(() => import('./UsersActivityPage'));
 
 function MainPage(){
 
@@ -33,8 +34,8 @@ function MainPage(){
     <div>
       <TopBar />
 
-      <button onClick={() => deleteUser()}>Call API with Protected Route</button>
-      <button onClick={() => getUsersProfile()}>Just Call API</button>
+      {/*<button onClick={() => deleteUser()}>Call API with Protected Route</button>
+      <button onClick={() => getUsersProfile()}>Just Call API</button>*/}
 
       <Outlet />
     </div>
@@ -50,6 +51,7 @@ function App(){
         <Routes>
           <Route path='/' element={<MainPage/>}/>
             <Route path='login' element={<LogInPage/>}/>
+            <Route path='activity' element={<UserActivityPage />}/>
         </Routes>
       </BrowserRouter>
     </div>

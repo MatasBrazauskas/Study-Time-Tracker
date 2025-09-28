@@ -1,11 +1,12 @@
 import { useQuery} from "@tanstack/react-query";
 import { useDispatch, useSelector } from "react-redux";
 import type { RootState } from "./Store/store";
-
 import { getUsersProfile } from "./APIs/userProfileAPIs";
-import { USER_PROFILE_QUERY_KEY } from "./Utilities/const";
 import { setUsersInfo } from "./Store/usersStore";
 import { useNavigate } from "react-router-dom";
+
+import { RoleValues} from "./Utilities/types";
+import { USER_PROFILE_QUERY_KEY } from "./Utilities/const";
 
 function TopBar(){
 
@@ -15,10 +16,21 @@ function TopBar(){
     const dispatch = useDispatch();
     const navigator = useNavigate();
 
+
     useQuery({
         queryFn: async() => {
             const usersData = await getUsersProfile();
             dispatch(setUsersInfo(usersData));
+
+            switch(usersData.role){
+                case RoleValues.GUEST:
+                    navigator('/login')
+                    break;
+                case RoleValues.USER:
+                    navigator('/activity')
+                    break;
+            }
+
             return usersData;
         },
         queryKey: [USER_PROFILE_QUERY_KEY],
@@ -36,7 +48,7 @@ function TopBar(){
             })}
 
             <button onClick={() => navigator('/login')}>Log In</button>
-            <button onClick={() => navigator('/')}>Back To Main</button>
+            <button onClick={() => navigator('/activity')}>Back To Main</button>
         </div>
     )
 }

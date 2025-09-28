@@ -1,5 +1,6 @@
 package com.example.demo.Services;
 
+import com.example.demo.DTOs.AuthUserProfile;
 import com.example.demo.DTOs.UserCredentials;
 import com.example.demo.DTOs.UserProfileOutput;
 import com.example.demo.Entities.UsersProfile;
@@ -38,7 +39,7 @@ public class UserProfileService
     public ResponseEntity<UserProfileOutput> getUserInformation(HttpServletRequest request){
         final var persistentCookie = middleWareUtils.extractPersistentCookie(request);
 
-        if(persistentCookie == null) throw new CustomExceptions.UserNotFound();
+        if(persistentCookie == null) return ResponseEntity.ok(new UserProfileOutput());
 
         final var email = jwtUtils.extractEmail(persistentCookie.getValue());
         final var user = userProfileRepo.findByEmail(email).orElseThrow(() -> new CustomExceptions.UserNotFound());
@@ -75,10 +76,10 @@ public class UserProfileService
         return  ResponseEntity.ok(new UserProfileOutput(user));
     }
 
-    public ResponseEntity<UserProfileOutput> deleteUser(HttpServletResponse response, UsersProfile userProfile){
+    public ResponseEntity<UserProfileOutput> deleteUser(HttpServletResponse response, AuthUserProfile userProfile){
         if(userProfile == null) throw new CustomExceptions.UserNotFound();
 
-        userProfileRepo.delete(userProfile);
+        userProfileRepo.deleteByEmail(userProfile.getEmail());
         cookieUtils.deleteCookies(response);
 
         return ResponseEntity.ok(new UserProfileOutput());
