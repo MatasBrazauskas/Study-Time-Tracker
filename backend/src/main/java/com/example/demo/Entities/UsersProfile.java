@@ -10,6 +10,8 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "UserProfile", indexes = {@Index(columnList = "email")})
@@ -48,6 +50,9 @@ public class UsersProfile
     @UpdateTimestamp
     @Column(nullable = false, columnDefinition = "DATE DEFAULT(CURRENT_DATE)")
     private LocalDate lastOnline;
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<YearActivity> activityList = new ArrayList<>();
 
     public UsersProfile(UserCredentials newUser)
     {
