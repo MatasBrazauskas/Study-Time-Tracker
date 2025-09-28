@@ -46,9 +46,6 @@ function TopBar(){
             {Object.entries(errors).map((value, i) => {
                 return <div key={i}>{value[0]}: {value[1]}</div>
             })}
-
-            <button onClick={() => navigator('/login')}>Log In</button>
-            <button onClick={() => navigator('/activity')}>Back To Main</button>
         </div>
     )
 }

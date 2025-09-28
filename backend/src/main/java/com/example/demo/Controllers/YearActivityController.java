@@ -3,14 +3,11 @@ package com.example.demo.Controllers;
 import com.example.demo.Services.YearActivityService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @Slf4j
 @RestController
-@RequestMapping(name = "yearActivity")
+@RequestMapping(name = "userYearActivity")
 public class YearActivityController {
 
     private final YearActivityService yearService;
@@ -19,9 +16,9 @@ public class YearActivityController {
         this.yearService = yearService;
     }
 
-    @GetMapping
-    public ResponseEntity<?> getYearsActivity(@RequestBody int year){
-        log.info("getYearsActivity");
+    @GetMapping("/{year}")
+    public ResponseEntity<?> getYearsActivity(@PathVariable int year){
+        log.info("User year activity: {}", year);
         return ResponseEntity.ok().build();
     }
 }

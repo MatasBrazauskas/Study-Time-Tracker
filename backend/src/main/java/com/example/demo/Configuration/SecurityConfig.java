@@ -49,6 +49,7 @@ public class SecurityConfig {
             .authorizeHttpRequests(auth -> auth
                     .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                     .requestMatchers(HttpMethod.DELETE, "/userProfile").hasAnyAuthority(Role.USER.toString())
+                    .requestMatchers("/userYearActivity/**").hasAnyAuthority(Role.USER.toString())
                     .requestMatchers("/userProfile/**").permitAll()
             )
 
