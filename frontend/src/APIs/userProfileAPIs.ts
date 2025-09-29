@@ -9,8 +9,7 @@ export async function getUsersProfile(): Promise<UserProfileOutput>{
     return response.data;
 }
 
-export async function RegisterUser(data: UserCredentials) : Promise<UserProfileOutput>
-{
+export async function RegisterUser(data: UserCredentials) : Promise<UserProfileOutput>{
     const response = await axiosAuth.post(REGISTER_CONTROLLER_URL, data);
     return response.data;
 }

@@ -14,6 +14,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class UserProfileOutput {
+
     @Builder.Default
     private String username = Role.GUEST.toString();
 

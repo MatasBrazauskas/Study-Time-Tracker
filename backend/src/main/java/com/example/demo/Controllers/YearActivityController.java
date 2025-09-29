@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.*;
 
 @Slf4j
 @RestController
-@RequestMapping(name = "userYearActivity")
+@RequestMapping("/activity")
 public class YearActivityController {
 
     private final YearActivityService yearService;

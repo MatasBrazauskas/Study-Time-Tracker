@@ -3,7 +3,6 @@ package com.example.demo.Controllers;
 import com.example.demo.DTOs.AuthUserProfile;
 import com.example.demo.DTOs.UserCredentials;
 import com.example.demo.DTOs.UserProfileOutput;
-import com.example.demo.Entities.UsersProfile;
 import com.example.demo.Services.UserProfileService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;

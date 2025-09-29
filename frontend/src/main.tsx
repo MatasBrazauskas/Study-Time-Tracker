@@ -6,7 +6,6 @@ import { Provider } from 'react-redux';
 import store from './Store/store';
 
 import { GOOGLE_CLIENT_ID } from './Utilities/const';
-import './main.css';
 import { GoogleOAuthProvider } from '@react-oauth/google';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 
@@ -25,7 +24,10 @@ setUpInterceptors(store);
 const LogInPage = lazy(() => import('./LoginPage'));
 const UserActivityPage = lazy(() => import('./Activity/UsersActivityPage'));
 const ClockPage = lazy(() => import('./Clock/ClockPage'));
-import TopBar from './TopBarPage';
+import TopBar from './TopBar/TopBarPage';
+
+
+import './main.css';
 
 function MainPage(){
 
@@ -41,7 +43,7 @@ function MainPage(){
 function App(){
 
   return (
-    <div>
+    <div className='container'>
       <BrowserRouter>
         <Routes>
           <Route path='/' element={<MainPage/>}>

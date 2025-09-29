@@ -79,6 +79,8 @@ public class UserProfileService
     public ResponseEntity<UserProfileOutput> deleteUser(HttpServletResponse response, AuthUserProfile userProfile){
         if(userProfile == null) throw new CustomExceptions.UserNotFound();
 
+        System.out.println("Deleting user: " + userProfile.getEmail());
+
         userProfileRepo.deleteByEmail(userProfile.getEmail());
         cookieUtils.deleteCookies(response);
 
