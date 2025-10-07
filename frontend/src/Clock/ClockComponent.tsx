@@ -45,7 +45,7 @@ function Clock() {
 
     const endSession = async () => {
         console.log(`This is full year: ${new Date().getFullYear()}`);
-        await getYearsActivity(new Date().getFullYear())
+        await getYearsActivity(new Date().getFullYear(), Math.round(elapsed / 1000));
     }
 
     return (
@@ -58,7 +58,7 @@ function Clock() {
             </p>
             <div>
                 <button onClick={startAndStop}>{isRunning ? "Stop" : "Start"}</button>
-                <button onClick={reset}>Reset</button>
+                <button onClick={() => reset}>Reset</button>
                 <button onClick={() => endSession()}>End Session</button>
             </div>
         </div>

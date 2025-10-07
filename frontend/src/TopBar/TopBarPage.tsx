@@ -47,7 +47,7 @@ function TopBar(){
     return (
         <div className="container">
             {errors.message && 
-            <div>
+            <div className='error-box'>
                 <div>Message : {errors.message}</div>
                 <div>Status : {errors.status}</div>
             </div>
@@ -56,7 +56,7 @@ function TopBar(){
             <div>{usersProfile.username}</div>
             {usersProfile.lastOnline && <div>{usersProfile.lastOnline}</div>}
 
-            <div>
+            <div className = 'actions'>
                 <button onClick={() => delUser()}>Delete User</button>
             </div>
         </div>
