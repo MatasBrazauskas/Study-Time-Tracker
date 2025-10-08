@@ -24,7 +24,7 @@ function LogIn()
         const data = await apiFunction(usersInfo);
 
         dispatch(setUsersInfo(data));
-        navigation('/activity')
+        navigation('/main')
     }
 
     return (

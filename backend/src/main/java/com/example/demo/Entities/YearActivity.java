@@ -5,11 +5,13 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.type.SqlTypes;
+import org.springframework.cglib.core.Local;
 
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.temporal.WeekFields;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -31,57 +33,40 @@ public class YearActivity{
     @Column(nullable = false, columnDefinition = "YEAR")
     private int year;
 
-    @Column(name = "year_activity", nullable = false, columnDefinition = "VARBINARY(53)")
-    private byte[] yearActivity;
+    /*@Column(name = "year_activity", nullable = false, columnDefinition = "VARBINARY(53)")
+    private byte[] yearActivity;*/
+
+    @JdbcTypeCode(SqlTypes.JSON)
+    @Column(name = "month_masks", columnDefinition = "json")
+    private List<Integer> monthMasks = Arrays.asList(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
 
     @JdbcTypeCode(SqlTypes.JSON)
     @Column(name = "days_minutes", nullable = false, columnDefinition = "json")
-    private List<Integer> daysMinutes;
+    private List<Integer> secondsArray;
 
     public void addSecondsToLast(int sec)
     {
-        daysMinutes.set(daysMinutes.size() - 1, daysMinutes.get(daysMinutes.size() - 1) + sec);
+        secondsArray.set(secondsArray.size() - 1, secondsArray.get(secondsArray.size() - 1) + sec);
     }
 
     public void pushBackLastSeconds(int sec)
     {
-        daysMinutes.add(sec);
+        secondsArray.add(sec);
     }
 
     public YearActivity(String usersEmail, int year, int seconds)
     {
         this.usersEmail = usersEmail;
         this.year = year;
-        this.daysMinutes = List.of(seconds);
-        this.yearActivity = new byte[53];
+        this.secondsArray= List.of(seconds);
         this.flipTheBitMaskBit();
     }
 
     public void flipTheBitMaskBit()
     {
-        var i = getWeekIndex();
-        var j = getDayOfWeekIndex();
+        int dayOfMonthIndex = LocalDate.now().getDayOfMonth() - 1;
+        int monthIndex = LocalDate.now().getMonthValue() - 1;
 
-        yearActivity[i] = (byte) (yearActivity[i] ^ (1 << j));
-    }
-
-    public static int getWeekIndex() {
-        LocalDate today = LocalDate.now();
-
-        WeekFields isoWeekFields = WeekFields.ISO;
-
-        int weekIndex = today.get(isoWeekFields.weekOfYear());
-
-        return weekIndex;
-    }
-
-    public static int getDayOfWeekIndex() {
-        LocalDate today = LocalDate.now();
-
-        DayOfWeek dayOfWeek = today.getDayOfWeek();
-
-        int index = dayOfWeek.getValue();
-
-        return index - 1;
+        monthMasks.set(monthIndex, monthMasks.get(monthIndex) ^ (1 << dayOfMonthIndex));
     }
 }

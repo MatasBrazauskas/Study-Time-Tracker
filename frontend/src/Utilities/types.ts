@@ -21,3 +21,9 @@ export type GlobalErrorState = {
     status: number | null;
     message: string | null;
 }
+
+export type ActivityState = {
+    year: number | undefined,
+    days_minutes: [],
+    month_masks: []
+}

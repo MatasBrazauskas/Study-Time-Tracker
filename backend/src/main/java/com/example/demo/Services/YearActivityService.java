@@ -6,6 +6,8 @@ import com.example.demo.Repositories.YearActivityRepo;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class YearActivityService {
 
@@ -24,15 +26,15 @@ public class YearActivityService {
         var yearActivity = yearRepo.findByUsersEmail(email);
 
         if(yearActivity == null){
-            yearRepo.save(new YearActivity(email, year, seconds));
-            return ResponseEntity.ok("Created a new year entry");
+            var createdYearActivity = yearRepo.save(new YearActivity(email, year, seconds));
+            return ResponseEntity.ok(createdYearActivity);
         }
 
-        if(yearActivity.getDaysMinutes().stream().count() == countSetBits(yearActivity.getYearActivity())){
+        if(yearActivity.getSecondsArray().stream().count() == countSetBits(yearActivity.getMonthMasks())){
             yearActivity.addSecondsToLast(seconds);
         }else{
             yearActivity.pushBackLastSeconds(seconds);
-            yearActivity.flipTheBitMaskBit();
+            //yearActivity.flipTheBitMaskBit();
         }
 
         yearActivityRepo.save(yearActivity);
@@ -40,16 +42,15 @@ public class YearActivityService {
         return ResponseEntity.ok(yearActivity);
     }
 
-    public static int countSetBits(byte[] bitmask) {
+    public static int countSetBits(List<Integer> bitmask) {
         if (bitmask == null) {
             return 0;
         }
 
         int totalSetBits = 0;
 
-        for (byte b : bitmask) {
-            int unsignedByte = b & 0xFF;
-            totalSetBits += Integer.bitCount(unsignedByte);
+        for (int b : bitmask) {
+            totalSetBits += Integer.bitCount(b);
         }
 
         return totalSetBits;

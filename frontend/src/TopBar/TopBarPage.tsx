@@ -30,7 +30,7 @@ function TopBar(){
                     navigator('/login')
                     break;
                 case RoleValues.USER:
-                    navigator('/activity')
+                    navigator('/main')
                     break;
             }
 

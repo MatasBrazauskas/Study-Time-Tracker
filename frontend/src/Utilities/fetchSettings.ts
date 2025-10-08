@@ -3,6 +3,8 @@ import { setErrors, clearErrors } from "../Store/errorsStore";
 import { type AppStore } from "../Store/store";
 import type { GlobalErrorState } from "./types";
 
+import { QueryClient } from "@tanstack/react-query";
+
 
 export const axiosAuth = axios.create({
     withCredentials: true,
@@ -45,3 +47,12 @@ export const setUpInterceptors = (store: AppStore) => {
         }
     );
 }
+
+export const queryClient = new QueryClient({
+  defaultOptions:{
+    queries:{
+      staleTime: 60 * 5,
+    }
+  }
+});
+
