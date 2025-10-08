@@ -2,11 +2,13 @@ import { configureStore } from "@reduxjs/toolkit";
 
 import userReducer from './usersStore';
 import errorsReducer from './errorsStore';
+import activityReducer from './activityStore';
 
 const store = configureStore({
     reducer: {
         USERS_DATA_SLICES_NAME: userReducer,
         ERRORS_SLICES_NAME: errorsReducer,
+        ACTIVITY_SLICES_NAME: activityReducer,
     }
 });
 

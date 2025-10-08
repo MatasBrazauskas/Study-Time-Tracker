@@ -16,6 +16,7 @@ export const urlParameterization = (baseUrl: string, ...arr: string[]) => {
 
 export const USERS_DATA_SLICES_NAME = 'usersData';
 export const ERRORS_SLICES_NAME = 'errorsData';
+export const ACTIVITY_SLICES_NAME = 'activityData';
 
 
 export const USER_PROFILE_QUERY_KEY = 'userProfile';

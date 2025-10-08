@@ -28,18 +28,20 @@ public class SecurityConfig {
     private final JwtUtils jwtUtils;
     private final CookieUtils cookieUtils;
     private final UserProfileService userProfileService;
+    private final AuthorizationFilter authorizationFilter;
 
     public SecurityConfig(MiddleWareUtils middleWareUtils, JwtUtils jwtUtils, CookieUtils cookieUtils, UserProfileService userProfileService) {
         this.middleWareUtils = middleWareUtils;
         this.jwtUtils = jwtUtils;
         this.cookieUtils = cookieUtils;
         this.userProfileService = userProfileService;
+        this.authorizationFilter = new AuthorizationFilter(middleWareUtils, jwtUtils, cookieUtils, userProfileService);
     }
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
-            .cors(Customizer.withDefaults()) // CORS is handled by your CorsConfig class
+            .cors(Customizer.withDefaults())
             .csrf(csrf -> csrf.disable())
 
             .sessionManagement(session -> session
@@ -48,12 +50,18 @@ public class SecurityConfig {
 
             .authorizeHttpRequests(auth -> auth
                     .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
+
+                    .requestMatchers("/activity/**").hasAuthority(Role.USER.toString())
                     .requestMatchers(HttpMethod.DELETE, "/userProfile").hasAnyAuthority(Role.USER.toString())
-                    .requestMatchers("/userYearActivity/**").hasAnyAuthority(Role.USER.toString())
-                    .requestMatchers("/userProfile/**").permitAll()
+
+                    .requestMatchers(HttpMethod.POST, "/userProfile/register").permitAll()
+                    .requestMatchers(HttpMethod.POST, "/userProfile/logIn").permitAll()
+                    .requestMatchers(HttpMethod.GET, "/userProfile").permitAll()
+
+                    .anyRequest().permitAll()
             )
 
-                .addFilterBefore(new AuthorizationFilter(middleWareUtils, jwtUtils, cookieUtils, userProfileService), UsernamePasswordAuthenticationFilter.class)
+                .addFilterBefore(authorizationFilter, UsernamePasswordAuthenticationFilter.class)
 
             .exceptionHandling(exceptions -> exceptions
                     .authenticationEntryPoint(new HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED))

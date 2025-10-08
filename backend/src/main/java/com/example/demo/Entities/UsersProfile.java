@@ -51,9 +51,6 @@ public class UsersProfile
     @Column(nullable = false, columnDefinition = "DATE DEFAULT(CURRENT_DATE)")
     private LocalDate lastOnline;
 
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<YearActivity> activityList = new ArrayList<>();
-
     public UsersProfile(UserCredentials newUser)
     {
         this.username = newUser.getUsername();

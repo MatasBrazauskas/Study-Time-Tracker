@@ -8,24 +8,18 @@ import store from './Store/store';
 import { GOOGLE_CLIENT_ID } from './Utilities/const';
 import './main.css';
 import { GoogleOAuthProvider } from '@react-oauth/google';
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 
-export const queryClient = new QueryClient({
-  defaultOptions:{
-    queries:{
-      staleTime: 60 * 5,
-    }
-  }
-});
+import { QueryClientProvider } from '@tanstack/react-query';
+import { queryClient } from './Utilities/fetchSettings';
 
 import { setUpInterceptors } from './Utilities/fetchSettings';
-
 setUpInterceptors(store);
+
 
 const LogInPage = lazy(() => import('./LoginPage'));
 const UserActivityPage = lazy(() => import('./Activity/UsersActivityPage'));
-const ClockPage = lazy(() => import('./Clock/ClockPage'));
-import TopBar from './TopBarPage';
+const ClockPage = lazy(() => import('./Clock/ClockComponent'));
+const TopBar =  lazy(() => import('./TopBar/TopBarPage'));
 
 function MainPage(){
 
@@ -46,8 +40,11 @@ function App(){
         <Routes>
           <Route path='/' element={<MainPage/>}>
             <Route path='login' element={<LogInPage/>}/>
-            <Route path='activity' element={<UserActivityPage />}/>
-            <Route path='clock' element={<ClockPage />}/>
+            <Route path='main' element={
+            <div>
+                <UserActivityPage />
+                <ClockPage />
+            </div>}/>
           </Route>
         </Routes>
       </BrowserRouter>

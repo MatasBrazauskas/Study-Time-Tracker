@@ -6,4 +6,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface YearActivityRepo extends JpaRepository<YearActivity, Integer> {
+    YearActivity findByUsersEmail(String usersEmail);
 }

@@ -1,12 +1,15 @@
 import { useQuery} from "@tanstack/react-query";
 import { useDispatch, useSelector } from "react-redux";
-import type { RootState } from "./Store/store";
-import { getUsersProfile } from "./APIs/userProfileAPIs";
-import { setUsersInfo } from "./Store/usersStore";
+import type { RootState } from "../Store/store";
+import { getUsersProfile } from "../APIs/userProfileAPIs";
+import { setUsersInfo } from "../Store/usersStore";
 import { useNavigate } from "react-router-dom";
 
-import { RoleValues} from "./Utilities/types";
-import { USER_PROFILE_QUERY_KEY } from "./Utilities/const";
+import { RoleValues} from "../Utilities/types";
+import { USER_PROFILE_QUERY_KEY } from "../Utilities/const";
+import { deleteUser } from "../APIs/userProfileAPIs";
+
+import './style.css';
 
 function TopBar(){
 
@@ -27,7 +30,7 @@ function TopBar(){
                     navigator('/login')
                     break;
                 case RoleValues.USER:
-                    navigator('/activity')
+                    navigator('/main')
                     break;
             }
 
@@ -37,15 +40,25 @@ function TopBar(){
         staleTime: Infinity,
     });
 
-    return (
-        <div>
-            {Object.entries(usersProfile).map((value, i) => {
-                return <div key={i}>{value[0]}: {value[1]}</div>
-            })}
+    const delUser = async () => {
+        await deleteUser();
+    }
 
-            {Object.entries(errors).map((value, i) => {
-                return <div key={i}>{value[0]}: {value[1]}</div>
-            })}
+    return (
+        <div className="container">
+            {errors.message && 
+            <div className='error-box'>
+                <div>Message : {errors.message}</div>
+                <div>Status : {errors.status}</div>
+            </div>
+            }
+
+            <div>{usersProfile.username}</div>
+            {usersProfile.lastOnline && <div>{usersProfile.lastOnline}</div>}
+
+            <div className = 'actions'>
+                <button onClick={() => delUser()}>Delete User</button>
+            </div>
         </div>
     )
 }
