@@ -9,8 +9,6 @@ import { RoleValues} from "../Utilities/types";
 import { USER_PROFILE_QUERY_KEY } from "../Utilities/const";
 import { deleteUser } from "../APIs/userProfileAPIs";
 
-import './style.css';
-
 function TopBar(){
 
     const usersProfile = useSelector((state: RootState) => state.USERS_DATA_SLICES_NAME);

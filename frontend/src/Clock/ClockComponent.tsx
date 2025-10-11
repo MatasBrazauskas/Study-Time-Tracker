@@ -4,6 +4,8 @@ import { useDispatch } from "react-redux";
 import { getYearsActivity } from "../APIs/userActivityAPIs";
 import { setActivityState } from "../Store/activityStore";
 
+import './clock.css';
+
 function Clock() {
 
     const dispatch = useDispatch();
@@ -39,8 +41,17 @@ function Clock() {
         setRunning(!isRunning);
         if (!isRunning && startTime === null) {
             setStartTime(Date.now() - elapsed);
+        }else{
         }
     };
+
+    useEffect(() => {
+        const temp = async () => {
+            const data = await getYearsActivity(new Date().getFullYear(),0);
+            dispatch(setActivityState(data));
+        }
+        temp();
+    }, [])
 
     const reset = () => {
         setRunning(false);
@@ -51,16 +62,18 @@ function Clock() {
     const endSession = async () => {
         const data = await getYearsActivity(new Date().getFullYear(), Math.round(elapsed / 1000));
         dispatch(setActivityState(data));
+        setElapsed(0);
+        setRunning(false);
+        setStartTime(null);
     }
 
+    const time = `${hours.toString().padStart(2, "0")}:${minutes.toString().padStart(2, "0")}:${seconds.toString().padStart(2, "0")}:${milliseconds.toString().padStart(2, "0")}`;
+
     return (
-        <div>
-            <p>
-                {hours.toString().padStart(2, "0")}:
-                {minutes.toString().padStart(2, "0")}:
-                {seconds.toString().padStart(2, "0")}:
-                {milliseconds.toString().padStart(2, "0")}
-            </p>
+        <div className="clock-container">
+            <div className="clock-label">Current Time</div>
+            <hr className="lineup" />
+            <div className="clock-time">{time}</div>
             <div>
                 <button onClick={startAndStop}>{isRunning ? "Stop" : "Start"}</button>
                 <button onClick={() => reset}>Reset</button>

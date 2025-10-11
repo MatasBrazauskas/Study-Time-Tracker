@@ -5,15 +5,10 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.type.SqlTypes;
-import org.springframework.cglib.core.Local;
 
-import java.time.DayOfWeek;
 import java.time.LocalDate;
-import java.time.temporal.WeekFields;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Map;
 
 @Table(name = "year_activity")
 @Data
@@ -33,9 +28,6 @@ public class YearActivity{
     @Column(nullable = false, columnDefinition = "YEAR")
     private int year;
 
-    /*@Column(name = "year_activity", nullable = false, columnDefinition = "VARBINARY(53)")
-    private byte[] yearActivity;*/
-
     @JdbcTypeCode(SqlTypes.JSON)
     @Column(name = "month_masks", columnDefinition = "json")
     private List<Integer> monthMasks = Arrays.asList(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
@@ -52,6 +44,7 @@ public class YearActivity{
     public void pushBackLastSeconds(int sec)
     {
         secondsArray.add(sec);
+        this.flipTheBitMaskBit();
     }
 
     public YearActivity(String usersEmail, int year, int seconds)
@@ -62,7 +55,7 @@ public class YearActivity{
         this.flipTheBitMaskBit();
     }
 
-    public void flipTheBitMaskBit()
+    private void flipTheBitMaskBit()
     {
         int dayOfMonthIndex = LocalDate.now().getDayOfMonth() - 1;
         int monthIndex = LocalDate.now().getMonthValue() - 1;

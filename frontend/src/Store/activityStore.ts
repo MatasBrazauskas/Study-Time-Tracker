@@ -4,8 +4,8 @@ import { type ActivityState } from "../Utilities/types";
 
 const initialState: ActivityState = { 
     year: undefined,
-    days_minutes: [],
-    month_masks: []
+    secondsArray: [],
+    monthMasks: [0,0,0,0,0,0,0,0,0,0,0,0],
 }
 
 const activitySlice = createSlice({

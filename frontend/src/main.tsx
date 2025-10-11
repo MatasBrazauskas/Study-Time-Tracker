@@ -6,7 +6,6 @@ import { Provider } from 'react-redux';
 import store from './Store/store';
 
 import { GOOGLE_CLIENT_ID } from './Utilities/const';
-import './main.css';
 import { GoogleOAuthProvider } from '@react-oauth/google';
 
 import { QueryClientProvider } from '@tanstack/react-query';
@@ -51,6 +50,8 @@ function App(){
     </div>
   )
 }
+
+import './main.css';
 
 createRoot(document.getElementById('root')!).render(
   <GoogleOAuthProvider clientId={GOOGLE_CLIENT_ID}>

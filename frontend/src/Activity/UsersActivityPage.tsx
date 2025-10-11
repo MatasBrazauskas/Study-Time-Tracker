@@ -1,25 +1,59 @@
-import { useRef, useEffect } from 'react';
+import { useRef, useEffect, useMemo } from 'react';
 
-import './userStyle.css';
 import { useSelector } from 'react-redux';
 import type { RootState } from '../Store/store';
+import Chart from '../Clock/Chart';
 
-const DayRenderer = ({ daysCount, monthIndex }: { daysCount: number, monthIndex: number }) => {
-    const dayElements = Array.from({ length: daysCount }, (_, dayIndex) => (
-        <div 
-            key={`${monthIndex}-${dayIndex}`} 
-            className="day-box"
-        >
-            {dayIndex + 1}
-        </div>
-    ));
+import './activity.css';
+
+const MonthRenderer = ({ daysCount, monthsMask, startDayOfWeek = 0, monthsIndex = 0 }: 
+    { daysCount: number, monthsMask: number, startDayOfWeek?: number, monthsIndex: number }) => {
+
+    const weekArr = useMemo(() => {
+        const daysInWeek = 7;
+        
+        const monthsArr: boolean[] = Array(daysCount).fill(false);
+        for(let i = 0; i < daysCount; i++){
+            if((monthsMask & (1 << i)) !== 0){
+                monthsArr[i] = true;
+            }
+        }
+
+        const totalWeeks = Math.ceil(monthsArr.length / daysInWeek);
+
+        const newWeekArr: boolean[][] = Array.from({ length: totalWeeks }, (_, weekIndex) => {
+            const start = weekIndex * daysInWeek;
+            const arrLen = Math.min(daysInWeek, monthsArr.length - start);
+            let week = monthsArr.slice(start, start + arrLen);
+
+            while (week.length < arrLen) {
+                week.push(false);
+            }
+            return week;
+        });
+
+        return newWeekArr;
+
+    }, [daysCount, monthsMask, startDayOfWeek]);
+
 
     return (
-        <div className="month-container">
-            <h3>Month {monthIndex + 1} ({daysCount} days)</h3>
-            <div className="day-grid">
-                {dayElements}
-            </div>
+        <div className="month">
+                <div>{new Date(new Date().getFullYear(), monthsIndex+1, 0).toLocaleString('en-us',{month:'short'})}</div>
+                {weekArr.map((singleWeek, i) => {
+                   return (
+                        <div key={i} className="week">
+                            {singleWeek.map((isActive, j) => {
+                                return (
+                                    <div key={j} className={`day-box ${isActive ? 'active' : 'inactive'}`}>
+                                        {isActive && <p className="day-emoji">&#129001;</p>}
+                                        {!isActive && <p className="day-emoji">&#11036;</p>}
+                                    </div>
+                                )
+                            })}
+                        </div>
+                   ); 
+                })}
         </div>
     );
 };
@@ -39,21 +73,24 @@ function UsersActivityComponent() {
         }
 
         monthsDays.current = daysArray;
-
-        console.log(monthsDays.current);
-    }, []);
+    }, [usersActivity]);
 
     return (
-        <div className='activity'>
+        <div>
             <h2>Yearly Activity Tracker</h2>
+            <div className='year'> 
+                {monthsDays.current.map((daysCount, monthIndex) => (
+                    <MonthRenderer 
+                        key={monthIndex} 
+                        daysCount={daysCount} 
+                        monthsMask={usersActivity.monthMasks[monthIndex]}
+                        monthsIndex={monthIndex}
+                    />
+                ))}
+            </div>
             
-            {monthsDays.current.map((daysCount, monthIndex) => (
-                <DayRenderer 
-                    key={monthIndex} 
-                    daysCount={daysCount} 
-                    monthIndex={monthIndex}
-                />
-            ))}
+            <Chart bitMaskArray={usersActivity.monthMasks} timeSpentArray={usersActivity.secondsArray} />
+
         </div>
     );
 }

@@ -1,0 +1,28 @@
+.year {
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 5px;
+}
+
+.month {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  margin: 8px 0;
+  gap: 2px;
+}
+
+.week {
+  display: flex;
+  align-items: start;
+  justify-content: flex-start;
+}
+
+.day-emoji {
+    margin: 0;
+    line-height: 1; 
+    
+    font-size: 10px; 
+}

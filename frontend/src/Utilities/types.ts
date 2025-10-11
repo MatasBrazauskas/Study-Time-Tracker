@@ -24,6 +24,6 @@ export type GlobalErrorState = {
 
 export type ActivityState = {
     year: number | undefined,
-    days_minutes: [],
-    month_masks: []
+    secondsArray: [],
+    monthMasks: number[]
 }
